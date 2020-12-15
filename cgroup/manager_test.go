@@ -6,4 +6,3 @@ import (
 
 func TestSubsystem(t *testing.T) {
 }
-

@@ -11,13 +11,13 @@ type Manager interface {
 	GetProcNamespace(pid int) []string
 }
 
-type NSManager struct{}
+type nsManager struct{}
 
-func NewNSManager() NSManager {
-	return NSManager{}
+func NewNSManager() *nsManager {
+	return &nsManager{}
 }
 
-func (m NSManager) IsSupported(cfg *configs.NamespaceConfig) (bool, error) {
+func (m *nsManager) IsSupported(cfg *configs.NamespaceConfig) (bool, error) {
 	nss := config2nss(cfg)
 	for _, ns := range nss {
 		if !ns.isSupported() {
@@ -27,7 +27,7 @@ func (m NSManager) IsSupported(cfg *configs.NamespaceConfig) (bool, error) {
 	return true, nil
 }
 
-func (m NSManager) GetCloneFlag(cfg *configs.NamespaceConfig) (uintptr, error) {
+func (m *nsManager) GetCloneFlag(cfg *configs.NamespaceConfig) (uintptr, error) {
 	if support, err := m.IsSupported(cfg); !support {
 		return 0, err
 	}
@@ -41,7 +41,7 @@ func (m NSManager) GetCloneFlag(cfg *configs.NamespaceConfig) (uintptr, error) {
 	return uintptr(flag), nil
 }
 
-func (m NSManager) GetProcNamespace(pid int) []string {
+func (m *nsManager) GetProcNamespace(pid int) []string {
 	nss := make([]string, 0, 6)
 	if NET.isSet(pid) {
 		nss = append(nss, "net")

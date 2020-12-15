@@ -24,7 +24,7 @@ func NewSubsystem(name, file string) Subsystem {
 	}
 }
 
-type sub struct{
+type sub struct {
 	name, file string
 }
 

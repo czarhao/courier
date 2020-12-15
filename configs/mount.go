@@ -2,7 +2,7 @@ package configs
 
 type MountConfig struct {
 	UsePivotRoot bool
-	Path string
+	Path         string
 }
 
 func NewDefaultMountConfig() *MountConfig {

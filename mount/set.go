@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	procMountFlags = syscall.MS_NOEXEC | syscall.MS_NOSUID | syscall.MS_NODEV
+	procMountFlags  = syscall.MS_NOEXEC | syscall.MS_NOSUID | syscall.MS_NODEV
 	tmpfsMountFlags = syscall.MS_NOSUID | syscall.MS_STRICTATIME
 )
 
@@ -25,7 +25,7 @@ func SetMount(cfg *configs.MountConfig) error {
 		if err := pivotRoot(cfg.Path); err != nil {
 			return err
 		}
-	}else {
+	} else {
 		if err := chroot(cfg.Path); err != nil {
 			return err
 		}

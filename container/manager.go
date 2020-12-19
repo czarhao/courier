@@ -26,7 +26,7 @@ func NewProc(config *configs.ContainerConfig) (*proc, error) {
 		return nil, fmt.Errorf("failed to create pipe, err: %v", err)
 	}
 
-	cmd := exec.Command("/proc/self/exe", "cmd")
+	cmd := exec.Command("/proc/self/exe", "init")
 	cmd.ExtraFiles = []*os.File{rpipe}
 
 	if config.Other.TTY {

@@ -12,7 +12,7 @@ type ns string
 const (
 	NET  ns = "net"
 	PID  ns = "pid"
-	NS   ns = "ns"
+	NS   ns = "mnt"
 	UTS  ns = "uts"
 	IPC  ns = "ipc"
 	USER ns = "user"

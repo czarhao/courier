@@ -15,16 +15,6 @@ type Process interface {
 }
 
 func RunProc(p Process) (err error) {
-	if err := initProc(p); err != nil {
-		return err
-	}
-	if err := p.SendCmd(); err != nil {
-		return err
-	}
-	return p.Wait()
-}
-
-func initProc(p Process) (err error) {
 	if err = p.SetNamespace(); err != nil {
 		return err
 	}
@@ -35,11 +25,13 @@ func initProc(p Process) (err error) {
 	if err = p.CreateCgroup(); err != nil {
 		return err
 	}
-	defer func() {
-		err = p.DestroyCgroup()
-	}()
+	defer p.DestroyCgroup()
+
 	if err = p.SetCgroup(); err != nil {
 		return err
 	}
-	return nil
+	if err := p.SendCmd(); err != nil {
+		return err
+	}
+	return p.Wait()
 }

@@ -5,5 +5,7 @@ type CgroupConfig struct {
 }
 
 func NewDefaultCgroupConfig() *CgroupConfig {
-	return &CgroupConfig{}
+	return &CgroupConfig{
+		CpuShares: "512",
+	}
 }

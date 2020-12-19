@@ -24,7 +24,14 @@ func main() {
 			Aliases: []string{"r"},
 			Usage:   `Run a container, example: "courier run template.yaml"`,
 			Action:  actions.Run,
-		})
+		},
+
+		&cli.Command{
+			Name:   "init",
+			Hidden: true,
+			Action: actions.Init,
+		},
+	)
 
 	if err := courier.Run(os.Args); err != nil {
 		utils.Logger.Fatal("Courier have some trouble:%v", err)

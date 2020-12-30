@@ -34,6 +34,6 @@ func main() {
 	)
 
 	if err := courier.Run(os.Args); err != nil {
-		utils.Logger.Fatal("Courier have some trouble:%v", err)
+		utils.Logger.Fatalf("Courier have some trouble: %v", err)
 	}
 }

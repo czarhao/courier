@@ -21,6 +21,7 @@ type proc struct {
 }
 
 func NewProc(config *configs.ContainerConfig) (*proc, error) {
+	fmt.Println(config.Other.Name)
 	rpipe, wpipe, err := os.Pipe()
 	if err != nil {
 		return nil, fmt.Errorf("failed to create pipe, err: %v", err)
@@ -59,7 +60,7 @@ func (p *proc) CreateCgroup() error {
 }
 
 func (p *proc) SetCgroup() error {
-	return p.cm.Apply(p.cmd.Process.Pid, p.cfg.Other.Name)
+	return p.cm.Apply(p.cfg.Cgroup, p.cmd.Process.Pid, p.cfg.Other.Name)
 }
 
 func (p *proc) DestroyCgroup() error {

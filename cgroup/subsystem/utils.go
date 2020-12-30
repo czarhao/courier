@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
-	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -59,7 +58,7 @@ func writeCgroupProc(dir string, pid int) error {
 	if pid == -1 {
 		return nil
 	}
-	cgroupProcessesFile, err := os.OpenFile(filepath.Join(dir, CGROUP__PROCSESSES), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0700)
+	cgroupProcessesFile, err := os.OpenFile(path.Join(dir, CGROUP__PROCSESSES), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0700)
 	if err != nil {
 		return fmt.Errorf("failed to write %v to %v: %v", pid, CGROUP__PROCSESSES, err)
 	}
@@ -77,5 +76,8 @@ func readFile(path string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return string(content), nil
+	value := string(content)
+	value = strings.Replace(value, " ", "", -1)
+	value = strings.Replace(value, "\n", "", -1)
+	return value, nil
 }

@@ -11,29 +11,23 @@ import (
 type Subsystem interface {
 	Name() string
 	Create(config map[string]string, cgroup string) error
-	Apply(cgroup string, pid int) error
+	Apply(config map[string]string, cgroup string, pid int) error
 	Remove(cgroup string) error
 	Status(cgroup string) (string, error)
 	IsEqual(value string, config map[string]string) bool
+	IsDefault(value string) bool
 }
 
-func NewSubsystem(name, file string) Subsystem {
-	return &sub{
-		name: name,
-		file: file,
-	}
-}
-
-type sub struct {
+type basic struct {
 	name, file string
 }
 
-func (s *sub) Name() string {
-	return s.name
+func (b basic) Name() string {
+	return b.name
 }
 
-func (s *sub) Status(cgroup string) (string, error) {
-	croot, err := findCgroupMountPoint(s.Name())
+func (b basic) Status(cgroup string) (string, error) {
+	croot, err := findCgroupMountPoint(b.Name())
 	if err != nil {
 		return "", err
 	}
@@ -43,41 +37,48 @@ func (s *sub) Status(cgroup string) (string, error) {
 	} else if err != nil {
 		return "", err
 	}
-	return readFile(path.Join(cpath, s.file))
+	return readFile(path.Join(cpath, b.file))
 }
 
-func (s *sub) Create(config map[string]string, cgroup string) error {
-	if config[s.file] == "" {
+func (b basic) Create(config map[string]string, cgroup string) error {
+	if config[b.file] == "" {
 		return nil
 	}
-	mut, err := getCgroupMountPoint(s.Name(), cgroup, true)
+	mut, err := getCgroupMountPoint(b.Name(), cgroup, true)
 	if err != nil {
 		return err
 	}
-	if err := ioutil.WriteFile(path.Join(mut, s.file), []byte(config[s.file]), 0644); err != nil {
-		return fmt.Errorf("set subsystem s share fail %v", err)
+	if err := ioutil.WriteFile(path.Join(mut, b.file), []byte(config[b.file]), 0644); err != nil {
+		return fmt.Errorf("set subsystem %s fail %v", b.Name(), err)
 	}
 	return nil
 }
 
-func (s *sub) IsEqual(value string, config map[string]string) bool {
+func (b basic) IsEqual(value string, config map[string]string) bool {
 	value = strings.Replace(value, " ", "", -1)
 	value = strings.Replace(value, "\n", "", -1)
-	return value == config[s.file]
+	return value == config[b.file]
 }
 
-func (s *sub) Apply(cgroup string, pid int) error {
-	mut, err := getCgroupMountPoint(s.Name(), cgroup, false)
+func (b basic) Apply(config map[string]string, cgroup string, pid int) error {
+	if config[b.file] == "" {
+		return nil
+	}
+	mut, err := getCgroupMountPoint(b.Name(), cgroup, false)
 	if err != nil {
 		return err
 	}
 	return writeCgroupProc(mut, pid)
 }
 
-func (s *sub) Remove(cgroup string) error {
-	subsystemPath, err := getCgroupMountPoint(s.Name(), cgroup, false)
+func (b basic) Remove(cgroup string) error {
+	subsystemPath, err := getCgroupMountPoint(b.Name(), cgroup, false)
 	if err != nil {
-		return fmt.Errorf("remove subsystem %s fail %v", s.Name(), err)
+		return fmt.Errorf("remove subsystem %s fail %v", b.Name(), err)
 	}
 	return os.RemoveAll(subsystemPath)
+}
+
+func (b basic) IsDefault(value string) bool {
+	return value == ""
 }

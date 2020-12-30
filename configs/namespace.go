@@ -6,11 +6,11 @@ type NamespaceConfig struct {
 
 func NewDefaultNSConfig() *NamespaceConfig {
 	return &NamespaceConfig{
-		SetNET:  true,
-		SetPID:  true,
-		SetNS:   true,
-		SetUTS:  true,
-		SetIPC:  true,
-		SetUSER: true,
+		SetNET:  false,
+		SetPID:  false,
+		SetNS:   false,
+		SetUTS:  false,
+		SetIPC:  false,
+		SetUSER: false,
 	}
 }

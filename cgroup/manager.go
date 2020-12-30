@@ -7,7 +7,7 @@ import (
 )
 
 type Manager interface {
-	Apply(pid int, name string) error
+	Apply(config *configs.CgroupConfig, pid int, name string) error
 	Create(config *configs.CgroupConfig, name string) error
 	Destroy(name string) error
 	GetStat(name string) (map[string]string, error)
@@ -19,7 +19,14 @@ type manager struct {
 
 func NewManager() *manager {
 	return &manager{subs: []subsystem.Subsystem{
-		subsystem.NewSubsystem("cpu", "cpu.shares"),
+		subsystem.NewCpuPeriod(),
+		subsystem.NewCpuQuota(),
+		subsystem.NewCpuCpus(),
+		subsystem.NewCpuMems(),
+		subsystem.NewMemoryLimit(),
+		subsystem.NewSwappiness(),
+		subsystem.NewReadDevice(),
+		subsystem.NewWriteDevice(),
 	}}
 }
 
@@ -33,7 +40,7 @@ func (m *manager) Create(config *configs.CgroupConfig, name string) error {
 		if err != nil {
 			return fmt.Errorf("create cgroup fail, err: %v", err)
 		}
-		if len(status) != 0 && !sub.IsEqual(status, configMap) {
+		if !sub.IsDefault(status) && !sub.IsEqual(status, configMap) {
 			return fmt.Errorf("cgroup: %s is exited, but is not equaled our config", name)
 		}
 		if err := sub.Create(configMap, name); err != nil {
@@ -43,9 +50,13 @@ func (m *manager) Create(config *configs.CgroupConfig, name string) error {
 	return nil
 }
 
-func (m *manager) Apply(pid int, name string) error {
+func (m *manager) Apply(config *configs.CgroupConfig, pid int, name string) error {
+	if config == nil {
+		return fmt.Errorf("not set config! ")
+	}
+	configMap := config2map(config)
 	for _, sub := range m.subs {
-		if err := sub.Apply(name, pid); err != nil {
+		if err := sub.Apply(configMap, name, pid); err != nil {
 			return err
 		}
 	}

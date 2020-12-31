@@ -1,7 +1,6 @@
 package mount
 
 import (
-	"courier/configs"
 	"fmt"
 	"os"
 	"syscall"
@@ -12,32 +11,25 @@ const (
 	tmpfsMountFlags = syscall.MS_NOSUID | syscall.MS_STRICTATIME
 )
 
-func SetMount(cfg *configs.MountConfig) error {
-	if cfg.Path == "" {
-		pwd, err := os.Getwd()
-		if err != nil {
-			return fmt.Errorf("get pwd fail, error: %v", err)
-		}
-		cfg.Path = pwd
+func SetMount() error {
+	pwd, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("get pwd fail, error: %v", err)
 	}
-
-	if cfg.UsePivotRoot {
-		if err := pivotRoot(cfg.Path); err != nil {
-			return err
-		}
-	} else {
-		if err := chroot(cfg.Path); err != nil {
+	if err := pivotRoot(pwd); err != nil {
+		fmt.Println(err)
+		if err := chroot(pwd); err != nil {
 			return err
 		}
 	}
 
-	if err := syscall.Mount("proc", "/proc", "proc",
-		uintptr(procMountFlags), ""); err != nil {
-		return fmt.Errorf("mount /proc failed, err: %v", err)
-	}
-	if err := syscall.Mount("tmpfs", "/dev", "tmpfs",
-		uintptr(tmpfsMountFlags), "mode=755"); err != nil {
-		return fmt.Errorf("mount /dev failed, err: %v", err)
-	}
+	//if err := syscall.Mount("proc", "/proc", "proc",
+	//	uintptr(procMountFlags), ""); err != nil {
+	//	return fmt.Errorf("mount /proc failed, err: %v", err)
+	//}
+	//if err := syscall.Mount("tmpfs", "/dev", "tmpfs",
+	//	uintptr(tmpfsMountFlags), "mode=755"); err != nil {
+	//	return fmt.Errorf("mount /dev failed, err: %v", err)
+	//}
 	return nil
 }

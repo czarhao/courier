@@ -8,10 +8,13 @@ type Process interface {
 	Init() error
 
 	SetNamespace() error
-
+	// cgroup
 	CreateCgroup() error
 	SetCgroup() error
 	DestroyCgroup() error
+	// rootfs
+	Mount() error
+	Umount() error
 }
 
 func RunProc(p Process) (err error) {
@@ -30,6 +33,12 @@ func RunProc(p Process) (err error) {
 	if err = p.SetCgroup(); err != nil {
 		return err
 	}
+
+	if err = p.Mount(); err != nil {
+		return err
+	}
+	defer p.Umount()
+
 	if err := p.SendCmd(); err != nil {
 		return err
 	}

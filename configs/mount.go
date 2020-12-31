@@ -1,12 +1,15 @@
 package configs
 
 type MountConfig struct {
-	UsePivotRoot bool
 	Path         string
+	ReadLayer    string
+	WriteLayer   string
 }
 
 func NewDefaultMountConfig() *MountConfig {
 	return &MountConfig{
-		UsePivotRoot: true,
+		Path: "/home/czarhao/tmp/root",
+		ReadLayer: "/home/czarhao/tmp/busybox",
+		WriteLayer: "/home/czarhao/tmp/write",
 	}
 }

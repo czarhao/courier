@@ -2,6 +2,8 @@ package actions
 
 import (
 	"courier/container"
+	"courier/mount"
+	"fmt"
 	"github.com/urfave/cli/v2"
 	"os"
 	"os/exec"
@@ -13,6 +15,7 @@ func Init(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+	fmt.Println(mount.SetMount())
 	path, err := exec.LookPath(cmds[0])
 	if err != nil {
 		return err

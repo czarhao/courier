@@ -4,6 +4,7 @@ import (
 	"courier/configs"
 	"fmt"
 	"os/exec"
+	"syscall"
 )
 
 type Manager interface {
@@ -35,9 +36,8 @@ func (m manager) Destroy(container string) error {
 	if !ok {
 		return fmt.Errorf("not find container %s", container)
 	}
-	_, err := exec.Command("umount", path).CombinedOutput()
-	if err != nil {
-		return fmt.Errorf("unmount %s point failed, err: %v", path, err)
+	if err := syscall.Unmount(path, syscall.MNT_DETACH); err != nil {
+		return fmt.Errorf("mount %s failed, err: %v", path, err)
 	}
 	return nil
 }

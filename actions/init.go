@@ -16,6 +16,7 @@ func Init(c *cli.Context) error {
 		return err
 	}
 	fmt.Println(mount.SetMount())
+	defer fmt.Println(mount.ClearMount())
 	path, err := exec.LookPath(cmds[0])
 	if err != nil {
 		return err

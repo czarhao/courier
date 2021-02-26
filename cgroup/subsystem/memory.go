@@ -25,4 +25,3 @@ func NewSwappiness() Subsystem {
 func (s swappiness) IsDefault(value string) bool {
 	return value == "10"
 }
-

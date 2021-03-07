@@ -9,22 +9,31 @@ import (
 	"strings"
 )
 
-type IPAM struct {
+const (
+	IPAMDefaultAllocatorPath = "/root/.subnet.json"
+)
+
+type IPAM interface {
+	Allocate(subnet *net.IPNet) (net.IP, error)
+	Release(subnet *net.IPNet, ipaddr *net.IP) error
+}
+
+type ipam struct {
 	path    string
 	subnets map[string]string
 }
 
-func NewIPAM(path string) *IPAM {
+func NewIPAM(path string) *ipam {
 	if path == "" {
 		path = IPAMDefaultAllocatorPath
 	}
-	return &IPAM{
+	return &ipam{
 		path:    path,
 		subnets: map[string]string{},
 	}
 }
 
-func (i *IPAM) load() error {
+func (i *ipam) load() error {
 	if _, err := os.Stat(i.path); err != nil {
 		if os.IsNotExist(err) {
 			return nil
@@ -47,7 +56,7 @@ func (i *IPAM) load() error {
 	return nil
 }
 
-func (i *IPAM) dump() error {
+func (i *ipam) dump() error {
 	dir, _ := path.Split(i.path)
 	if _, err := os.Stat(dir); err != nil {
 		if os.IsNotExist(err) && os.MkdirAll(i.path, 0644) != nil {
@@ -67,7 +76,7 @@ func (i *IPAM) dump() error {
 	return err
 }
 
-func (i *IPAM) Allocate(subnet *net.IPNet) (net.IP, error) {
+func (i *ipam) Allocate(subnet *net.IPNet) (net.IP, error) {
 	if err := i.load(); err != nil {
 		return nil, err
 	}
@@ -97,7 +106,7 @@ func (i *IPAM) Allocate(subnet *net.IPNet) (net.IP, error) {
 	return ip, i.dump()
 }
 
-func (i *IPAM) Release(subnet *net.IPNet, ipaddr *net.IP) error {
+func (i *ipam) Release(subnet *net.IPNet, ipaddr *net.IP) error {
 	i.subnets = map[string]string{}
 	_, subnet, _ = net.ParseCIDR(subnet.String())
 

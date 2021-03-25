@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	MOUNTINFO_PATH     = "/proc/self/mountinfo"
-	CGROUP__PROCSESSES = "cgroup.procs"
+	mountinfoPath = "/proc/self/mountinfo"
+	CgroupProcess = "cgroup.procs"
 )
 
 func getCgroupMountPoint(subsystem, cgroupPath string, create bool) (string, error) {
@@ -33,7 +33,7 @@ func getCgroupMountPoint(subsystem, cgroupPath string, create bool) (string, err
 }
 
 func findCgroupMountPoint(subsystem string) (string, error) {
-	file, err := os.Open(MOUNTINFO_PATH)
+	file, err := os.Open(mountinfoPath)
 	if err != nil {
 		return "", err
 	}
@@ -53,14 +53,14 @@ func findCgroupMountPoint(subsystem string) (string, error) {
 
 func writeCgroupProc(dir string, pid int) error {
 	if dir == "" {
-		return fmt.Errorf("no such directory for %s", CGROUP__PROCSESSES)
+		return fmt.Errorf("no such directory for %s", CgroupProcess)
 	}
 	if pid == -1 {
 		return nil
 	}
-	cgroupProcessesFile, err := os.OpenFile(path.Join(dir, CGROUP__PROCSESSES), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0700)
+	cgroupProcessesFile, err := os.OpenFile(path.Join(dir, CgroupProcess), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0700)
 	if err != nil {
-		return fmt.Errorf("failed to write %v to %v: %v", pid, CGROUP__PROCSESSES, err)
+		return fmt.Errorf("failed to write %v to %v: %v", pid, CgroupProcess, err)
 	}
 	defer cgroupProcessesFile.Close()
 	_, err = cgroupProcessesFile.WriteString(strconv.Itoa(pid))

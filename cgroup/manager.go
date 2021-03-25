@@ -7,9 +7,14 @@ import (
 )
 
 type Manager interface {
+	// Apply 是根据 cgroup config 和进程 pid 加入到 cgroup 中
+	// name 是当前这个 container 的 name
 	Apply(config *configs.CgroupConfig, pid int, name string) error
+	// Create 是根据 cgroup config 来创建 cgroup
 	Create(config *configs.CgroupConfig, name string) error
+	// 删掉这个 container 的 cgroup
 	Destroy(name string) error
+	// 读取这个 container 的 cgroup 配置
 	GetStat(name string) (map[string]string, error)
 }
 
@@ -73,7 +78,7 @@ func (m *manager) Destroy(name string) error {
 }
 
 func (m *manager) GetStat(name string) (map[string]string, error) {
-	smap := map[string]string{}
+	stat := make(map[string]string, len(m.subs))
 	for _, sub := range m.subs {
 		status, err := sub.Status(name)
 		if err != nil {
@@ -82,7 +87,7 @@ func (m *manager) GetStat(name string) (map[string]string, error) {
 		if len(status) == 0 {
 			continue
 		}
-		smap[sub.Name()] = status
+		stat[sub.Name()] = status
 	}
-	return smap, nil
+	return stat, nil
 }

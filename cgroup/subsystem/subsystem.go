@@ -10,6 +10,7 @@ import (
 
 type Subsystem interface {
 	Name() string
+	// Create 根据
 	Create(config map[string]string, cgroup string) error
 	Apply(config map[string]string, cgroup string, pid int) error
 	Remove(cgroup string) error
@@ -18,6 +19,8 @@ type Subsystem interface {
 	IsDefault(value string) bool
 }
 
+// name: 这个 Subsystem 的名字
+// file: 这个 Subsystem 具体的文件名
 type basic struct {
 	name, file string
 }

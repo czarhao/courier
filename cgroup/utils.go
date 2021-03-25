@@ -23,12 +23,3 @@ func config2map(config *configs.CgroupConfig) map[string]string {
 	}
 	return configMap
 }
-
-func map2config(configMap map[string]string) *configs.CgroupConfig {
-	config := &configs.CgroupConfig{}
-	cfg := reflect.ValueOf(config).Elem()
-	for i := 0; i < cfg.NumField(); i++ {
-
-	}
-	return nil
-}

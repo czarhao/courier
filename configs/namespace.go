@@ -1,16 +1,16 @@
 package configs
 
 type NamespaceConfig struct {
-	SetNET, SetPID, SetNS, SetUTS, SetIPC, SetUSER bool
+	UseNET, UsePID, UseNS, UseUTS, UseIPC, UseUSER bool
 }
 
 func NewDefaultNSConfig() *NamespaceConfig {
 	return &NamespaceConfig{
-		SetNET:  true,
-		SetPID:  true,
-		SetNS:   true,
-		SetUTS:  true,
-		SetIPC:  true,
-		SetUSER: false,
+		UseNET:  true,
+		UsePID:  true,
+		UseNS:   true,
+		UseUTS:  true,
+		UseIPC:  true,
+		UseUSER: false,
 	}
 }

@@ -8,7 +8,7 @@ import (
 
 func CheckAndFormatConfig(config *configs.ContainerConfig) error {
 	// err
-	if _, err := namespace.NewNSManager().IsSupported(config.Namespace); err != nil {
+	if _, err := namespace.NewNSManager().VerifyNSConfig(config.Namespace); err != nil {
 		return err
 	}
 	// warn

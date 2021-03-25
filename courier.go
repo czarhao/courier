@@ -31,6 +31,13 @@ func main() {
 			Hidden: true,
 			Action: actions.Init,
 		},
+
+		&cli.Command{
+			Name: "template",
+			Aliases: []string{"t", "tmp", "temp"},
+			Usage:   `Create a standard template configuration, example: "courier temp (filename)"`,
+			Action: actions.Temp,
+		},
 	)
 
 	if err := courier.Run(os.Args); err != nil {

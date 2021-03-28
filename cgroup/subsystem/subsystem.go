@@ -10,13 +10,16 @@ import (
 
 type Subsystem interface {
 	Name() string
-	// Create 根据
+	// Create 根据 config 来创建对应的 subsystem
 	Create(config map[string]string, cgroup string) error
+	// Apply 是将进程 pid 加入到 subsystem 中
 	Apply(config map[string]string, cgroup string, pid int) error
+
 	Remove(cgroup string) error
 	Status(cgroup string) (string, error)
+
 	IsEqual(value string, config map[string]string) bool
-	IsDefault(value string) bool
+	IsSet(value map[string]string) bool
 }
 
 // name: 这个 Subsystem 的名字
@@ -82,6 +85,7 @@ func (b basic) Remove(cgroup string) error {
 	return os.RemoveAll(subsystemPath)
 }
 
-func (b basic) IsDefault(value string) bool {
-	return value == ""
+func (b basic) IsSet(config map[string]string) bool {
+	_, ok := config[b.file]
+	return ok
 }

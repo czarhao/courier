@@ -12,9 +12,9 @@ type Manager interface {
 	Apply(config *configs.CgroupConfig, pid int, name string) error
 	// Create 是根据 cgroup config 来创建 cgroup
 	Create(config *configs.CgroupConfig, name string) error
-	// 删掉这个 container 的 cgroup
+	// Destroy 删掉这个 container 的 cgroup
 	Destroy(name string) error
-	// 读取这个 container 的 cgroup 配置
+	// GetStat 读取这个 container 的 cgroup 配置
 	GetStat(name string) (map[string]string, error)
 }
 
@@ -45,8 +45,8 @@ func (m *manager) Create(config *configs.CgroupConfig, name string) error {
 		if err != nil {
 			return fmt.Errorf("create cgroup fail, err: %v", err)
 		}
-		if !sub.IsDefault(status) && !sub.IsEqual(status, configMap) {
-			return fmt.Errorf("cgroup: %s is exited, but is not equaled our config", name)
+		if sub.IsSet(configMap) || sub.IsEqual(status, configMap)  {
+			continue
 		}
 		if err := sub.Create(configMap, name); err != nil {
 			return fmt.Errorf("create cgroup: %s subsystem: %s failed! err: %v", name, sub.Name(), err)

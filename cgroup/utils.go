@@ -15,10 +15,9 @@ func config2map(config *configs.CgroupConfig) map[string]string {
 		cfgVal    = reflect.ValueOf(config).Elem()
 	)
 	for i := 0; i < cfgKey.NumField(); i++ {
-		key := cfgKey.Field(i).Tag.Get("file")
-		value := cfgVal.Field(i).String()
-		if value != "" {
-			configMap[key] = value
+		if !cfgVal.Field(i).IsNil() {
+			key := cfgKey.Field(i).Tag.Get("file")
+			configMap[key] = cfgVal.Field(i).Elem().String()
 		}
 	}
 	return configMap

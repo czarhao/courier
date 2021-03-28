@@ -21,7 +21,3 @@ func NewCpuQuota() Subsystem {
 		file: "cpu.cfs_quota_us",
 	}}
 }
-
-func (c cpuQuota) IsDefault(value string) bool {
-	return value == "-1"
-}

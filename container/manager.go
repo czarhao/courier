@@ -30,7 +30,7 @@ func NewProc(config *configs.ContainerConfig) (*proc, error) {
 
 	cmd := exec.Command("/proc/self/exe", "init")
 	cmd.ExtraFiles = []*os.File{rpipe}
-	// cmd.Dir = config.Mount.Path
+	// cmd.Dir = config.Mount.BaseDir
 	cmd.Dir = ""
 
 	if config.Other.TTY {

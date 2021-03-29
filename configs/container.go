@@ -2,7 +2,7 @@ package configs
 
 type ContainerConfig struct {
 	Cgroup    *CgroupConfig
-	Mount     *MountConfig
+	Mount     *RootfsConfig
 	Namespace *NamespaceConfig
 	Other     *OtherConfig
 }

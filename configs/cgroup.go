@@ -56,5 +56,3 @@ func (cfg *CgroupConfig) SetMemoryLimitMB(mb int) {
 	cfg.MemoryLimit = strconv.Itoa(val)
 }
 
-func (cfg *CgroupConfig)
-

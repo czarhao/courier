@@ -24,10 +24,10 @@ func mountOther() error {
 
 func umountOther() error {
 	if err := syscall.Unmount("/proc", syscall.MNT_DETACH); err != nil {
-		return fmt.Errorf("mount /proc failed, err: %v", err)
+		return fmt.Errorf("unmount /proc failed, err: %v", err)
 	}
 	if err := syscall.Unmount("/dev", syscall.MNT_DETACH); err != nil {
-		return fmt.Errorf("mount /dev failed, err: %v", err)
+		return fmt.Errorf("unmount /dev failed, err: %v", err)
 	}
 	return nil
 }

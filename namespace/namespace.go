@@ -3,8 +3,8 @@ package namespace
 import (
 	"courier/configs"
 	"fmt"
-	"golang.org/x/sys/unix"
 	"os"
+	"syscall"
 )
 
 type namespace string
@@ -44,7 +44,7 @@ func config2nss(cfg *configs.NamespaceConfig) []namespace {
 }
 
 func (n namespace) isSupported() bool {
-	path := fmt.Sprintf("/proc/self/namespace/%s", n)
+	path := fmt.Sprintf("/proc/self/ns/%s", n)
 	_, err := os.Stat(path)
 	return err == nil
 }
@@ -57,17 +57,17 @@ func (n namespace) isUsed(pid int) bool {
 func (n namespace) getFlag() int {
 	switch n {
 	case NET:
-		return unix.CLONE_NEWNET
+		return syscall.CLONE_NEWNET
 	case PID:
-		return unix.CLONE_NEWPID
+		return syscall.CLONE_NEWPID
 	case NS:
-		return unix.CLONE_NEWNS
+		return syscall.CLONE_NEWNS
 	case UTS:
-		return unix.CLONE_NEWUTS
+		return syscall.CLONE_NEWUTS
 	case IPC:
-		return unix.CLONE_NEWIPC
+		return syscall.CLONE_NEWIPC
 	case USER:
-		return unix.CLONE_NEWUSER
+		return syscall.CLONE_NEWUSER
 	}
 	return 0
 }

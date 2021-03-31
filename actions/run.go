@@ -7,7 +7,8 @@ import (
 )
 
 func Run(c *cli.Context) error {
-	proc, err := container.NewProc(configs.NewDefaultContainerConfig())
+	cfg := configs.NewDefaultContainerConfig()
+	proc, err := container.NewProc(cfg)
 	if err != nil {
 		return err
 	}

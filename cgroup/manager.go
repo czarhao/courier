@@ -45,7 +45,7 @@ func (m *manager) Create(config *configs.CgroupConfig, name string) error {
 		if err != nil {
 			return fmt.Errorf("create cgroup fail, err: %v", err)
 		}
-		if sub.IsSet(configMap) || sub.IsEqual(status, configMap)  {
+		if !sub.IsSet(configMap) || sub.IsEqual(status, configMap)  {
 			continue
 		}
 		if err := sub.Create(configMap, name); err != nil {

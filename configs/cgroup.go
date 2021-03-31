@@ -3,10 +3,13 @@ package configs
 import (
 	"courier/utils"
 	"errors"
+	"runtime"
 	"strconv"
 )
 
-const CgroupDefaultValue = -1
+const (
+	CgroupDefaultPeriod = 100000
+)
 
 var ErrCpuUsageSet = errors.New("set cpu usage failed, usage must: 100 > usage > 0")
 
@@ -28,26 +31,27 @@ type CgroupConfig struct {
 func NewDefaultCgroupConfig() *CgroupConfig {
 	return &CgroupConfig{}
 }
-
-// 100 > usage > 0
+// %
 func (cfg *CgroupConfig) SetCpuUsage(usage int) {
-	if usage == CgroupDefaultValue {
+	if usage < 1 {
+		utils.Logger.Warnf("set cpu usage failed, expect  usage > 0")
 		return
 	}
-	if usage > 100 || usage < 1 {
-		utils.Logger.Warnf("set cpu usage failed, expect usage < 100 && usage > 0")
-		return
+	sumCpu := runtime.NumCPU()
+	useCpu := usage / 100
+	if usage % 100 != 0 {
+		useCpu++
 	}
-	// TODO
-	return
-}
 
-func (cfg *CgroupConfig) SetCpuNum(num int) {
-	cpus := "0"
-	for i := 1; i < num; i++ {
-		cpus += "," + strconv.Itoa(i)
+	if  sumCpu < useCpu {
+		utils.Logger.Warnf("set cpu usage failed, usage < %d", sumCpu * 100)
+		return
 	}
-	cfg.CpuSetCpus = cpus
+
+	cfg.CpuCfsPeriodUs = strconv.Itoa(CgroupDefaultPeriod)
+	cfg.CpuCfsQuotaUs = strconv.Itoa(CgroupDefaultPeriod / 100 * usage)
+
+	return
 }
 
 func (cfg *CgroupConfig) SetMemoryLimitMB(mb int) {

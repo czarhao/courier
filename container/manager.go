@@ -4,7 +4,6 @@ import (
 	"courier/cgroup"
 	"courier/configs"
 	"courier/namespace"
-	"courier/rootfs"
 	"fmt"
 	"os"
 	"os/exec"
@@ -15,7 +14,7 @@ import (
 type proc struct {
 	ns  namespace.Manager
 	cm  cgroup.Manager
-	rm  rootfs.Manager
+//	rm  rootfs.Manager
 	cfg *configs.ContainerConfig
 
 	wpipe *os.File
@@ -31,7 +30,7 @@ func NewProc(config *configs.ContainerConfig) (*proc, error) {
 	cmd := exec.Command("/proc/self/exe", "init")
 	cmd.ExtraFiles = []*os.File{rpipe}
 	// cmd.Dir = config.Mount.BaseDir
-	cmd.Dir = ""
+	cmd.Dir = "/"
 
 	if config.Other.TTY {
 		cmd.Stdin, cmd.Stdout, cmd.Stderr = os.Stdin, os.Stdout, os.Stderr
@@ -40,7 +39,7 @@ func NewProc(config *configs.ContainerConfig) (*proc, error) {
 	return &proc{
 		ns:    namespace.NewNSManager(),
 		cm:    cgroup.NewManager(),
-		rm:    rootfs.NewManager(),
+//		rm:    rootfs.NewManager(),
 		cfg:   config,
 		wpipe: wpipe,
 		cmd:   cmd,
@@ -91,9 +90,11 @@ func (p *proc) Wait() error {
 }
 
 func (p *proc) Mount() error {
-	return p.rm.Create(p.cfg.Other.Name, p.cfg.Mount)
+	return nil
+//	return p.rm.Create(p.cfg.Other.Name, p.cfg.Mount)
 }
 
 func (p *proc) Umount() error {
-	return p.rm.Destroy(p.cfg.Other.Name)
+	return nil
+//	return p.rm.Destroy(p.cfg.Other.Name)
 }

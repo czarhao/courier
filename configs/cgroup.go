@@ -2,7 +2,6 @@ package configs
 
 import (
 	"courier/utils"
-	"errors"
 	"runtime"
 	"strconv"
 )
@@ -10,8 +9,6 @@ import (
 const (
 	CgroupDefaultPeriod = 100000
 )
-
-var ErrCpuUsageSet = errors.New("set cpu usage failed, usage must: 100 > usage > 0")
 
 type CgroupConfig struct {
 	// cpu
@@ -31,7 +28,7 @@ type CgroupConfig struct {
 func NewDefaultCgroupConfig() *CgroupConfig {
 	return &CgroupConfig{}
 }
-// %
+// SetCpuUsage 传入的 usage 应该是 CPU核数*100 > usage > 0
 func (cfg *CgroupConfig) SetCpuUsage(usage int) {
 	if usage < 1 {
 		utils.Logger.Warnf("set cpu usage failed, expect  usage > 0")
@@ -54,6 +51,7 @@ func (cfg *CgroupConfig) SetCpuUsage(usage int) {
 	return
 }
 
+// SetMemoryLimitMB 传入的是限制的最大内存数
 func (cfg *CgroupConfig) SetMemoryLimitMB(mb int) {
 	// mb => kb => b
 	val := mb * 1024 * 1024

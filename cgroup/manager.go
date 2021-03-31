@@ -18,6 +18,7 @@ type Manager interface {
 	GetStat(name string) (map[string]string, error)
 }
 
+// TODO 支持更多的 subsystem
 type manager struct {
 	subs []subsystem.Subsystem
 }
@@ -41,10 +42,15 @@ func (m *manager) Create(config *configs.CgroupConfig, name string) error {
 	}
 	configMap := config2map(config)
 	for _, sub := range m.subs {
+		// 会出现 3 种情况
+		// 1. 读取到了 当前 subsystem 的状态
+		// 2. 读不到 subsystem 的状态：文件不存在(一般是这个)
+		// 3. 发生 err
 		status, err := sub.Status(name)
 		if err != nil {
 			return fmt.Errorf("create cgroup fail, err: %v", err)
 		}
+		// 判断一下是否已经设置了(文件存在与否) || 设置的结果与我们期望的是否一致
 		if !sub.IsSet(configMap) || sub.IsEqual(status, configMap)  {
 			continue
 		}

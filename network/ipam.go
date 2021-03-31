@@ -63,7 +63,7 @@ func (i *ipam) dump() error {
 			return err
 		}
 	}
-	configFile, err := os.OpenFile(i.path, os.O_TRUNC | os.O_WRONLY | os.O_CREATE, 0644)
+	configFile, err := os.OpenFile(i.path, os.O_TRUNC|os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
 		return err
 	}
@@ -84,7 +84,7 @@ func (i *ipam) Allocate(subnet *net.IPNet) (net.IP, error) {
 	one, size := subnet.Mask.Size()
 
 	if _, exist := i.subnets[subnet.String()]; !exist {
-		i.subnets[subnet.String()] = strings.Repeat("0", 1 << uint8(size - one))
+		i.subnets[subnet.String()] = strings.Repeat("0", 1<<uint8(size-one))
 	}
 
 	var ip net.IP
@@ -95,7 +95,7 @@ func (i *ipam) Allocate(subnet *net.IPNet) (net.IP, error) {
 			ipalloc[c] = '1'
 			i.subnets[subnet.String()] = string(ipalloc)
 			ip = subnet.IP
-			for t := uint(4); t > 0; t -=1{
+			for t := uint(4); t > 0; t -= 1 {
 				[]byte(ip)[4-t] += uint8(c >> ((t - 1) * 8))
 			}
 			ip[3] += 1
@@ -114,13 +114,13 @@ func (i *ipam) Release(subnet *net.IPNet, ipaddr *net.IP) error {
 		return err
 	}
 	var (
-		c = 0
+		c         = 0
 		releaseIP = ipaddr.To4()
 	)
 
-	releaseIP[3]-=1
-	for t := uint(4); t > 0; t-=1 {
-		c += int(releaseIP[t-1] - subnet.IP[t-1]) << ((4-t) * 8)
+	releaseIP[3] -= 1
+	for t := uint(4); t > 0; t -= 1 {
+		c += int(releaseIP[t-1]-subnet.IP[t-1]) << ((4 - t) * 8)
 	}
 
 	ipalloc := []byte(i.subnets[subnet.String()])

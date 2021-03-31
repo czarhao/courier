@@ -15,7 +15,7 @@ type Network struct {
 
 var (
 	defaultNetworkPath = "/root/.network/"
-	ipAllocator = NewIPAM(IPAMDefaultAllocatorPath)
+	ipAllocator        = NewIPAM(IPAMDefaultAllocatorPath)
 )
 
 func CreateNetwork(driver, subnet, name string) error {
@@ -42,7 +42,7 @@ func (n *Network) dump(dumpPath string) error {
 	}
 
 	nwPath := path.Join(dumpPath, n.Name)
-	nwFile, err := os.OpenFile(nwPath, os.O_TRUNC | os.O_WRONLY | os.O_CREATE, 0644)
+	nwFile, err := os.OpenFile(nwPath, os.O_TRUNC|os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
 		logrus.Errorf("error：%v", err)
 		return err

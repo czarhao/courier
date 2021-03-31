@@ -11,11 +11,11 @@ type namespace string
 
 // 六种 namespace
 const (
-	NET  namespace = "net"
-	PID  namespace = "pid"
-	NS   namespace = "mnt"
-	UTS  namespace = "uts"
-	IPC  namespace = "ipc"
+	NET namespace = "net"
+	PID namespace = "pid"
+	NS  namespace = "mnt"
+	UTS namespace = "uts"
+	IPC namespace = "ipc"
 	// 一般是不会使用 user namespace 的
 	USER namespace = "user"
 )

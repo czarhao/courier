@@ -12,9 +12,9 @@ import (
 )
 
 type proc struct {
-	ns  namespace.Manager
-	cm  cgroup.Manager
-//	rm  rootfs.Manager
+	ns namespace.Manager
+	cm cgroup.Manager
+	//	rm  rootfs.Manager
 	cfg *configs.ContainerConfig
 
 	wpipe *os.File
@@ -37,9 +37,9 @@ func NewProc(config *configs.ContainerConfig) (*proc, error) {
 	}
 
 	return &proc{
-		ns:    namespace.NewNSManager(),
-		cm:    cgroup.NewManager(),
-//		rm:    rootfs.NewManager(),
+		ns: namespace.NewNSManager(),
+		cm: cgroup.NewManager(),
+		//		rm:    rootfs.NewManager(),
 		cfg:   config,
 		wpipe: wpipe,
 		cmd:   cmd,
@@ -91,10 +91,10 @@ func (p *proc) Wait() error {
 
 func (p *proc) Mount() error {
 	return nil
-//	return p.rm.Create(p.cfg.Other.Name, p.cfg.Mount)
+	//	return p.rm.Create(p.cfg.Other.Name, p.cfg.Mount)
 }
 
 func (p *proc) Umount() error {
 	return nil
-//	return p.rm.Destroy(p.cfg.Other.Name)
+	//	return p.rm.Destroy(p.cfg.Other.Name)
 }

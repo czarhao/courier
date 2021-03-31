@@ -12,11 +12,11 @@ type RootfsConfig struct {
 
 func NewDefaultMountConfig() *RootfsConfig {
 	return &RootfsConfig{
-		BaseDir:    "/root/.courier",
+		BaseDir:      "/root/.courier",
 		ImageStorage: "image",
-		UnzipPath:  "unzip",
-		ReadLayer:  "/home/czarhao/tmp/busybox",
-		WriteLayer: "/home/czarhao/tmp/write",
+		UnzipPath:    "unzip",
+		ReadLayer:    "/home/czarhao/tmp/busybox",
+		WriteLayer:   "/home/czarhao/tmp/write",
 	}
 }
 

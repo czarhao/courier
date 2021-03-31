@@ -33,10 +33,10 @@ func main() {
 		},
 
 		&cli.Command{
-			Name: "template",
+			Name:    "template",
 			Aliases: []string{"t", "tmp", "temp"},
 			Usage:   `Create a standard template configuration, example: "courier temp (filename)"`,
-			Action: actions.Temp,
+			Action:  actions.Temp,
 		},
 	)
 

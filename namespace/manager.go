@@ -9,7 +9,7 @@ import (
 type Manager interface {
 	// GetCloneFlag 是针对一个 namespace config 来生成 flag
 	GetCloneFlag(cfg *configs.NamespaceConfig) (uintptr, error)
-	
+
 	// VerifyNSConfig 判断这个 namespace config 中设置的 namespace
 	// 在当前的系统是否支持
 	VerifyNSConfig(cfg *configs.NamespaceConfig) (bool, error)

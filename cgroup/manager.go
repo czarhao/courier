@@ -51,7 +51,7 @@ func (m *manager) Create(config *configs.CgroupConfig, name string) error {
 			return fmt.Errorf("create cgroup fail, err: %v", err)
 		}
 		// 判断一下是否已经设置了(文件存在与否) || 设置的结果与我们期望的是否一致
-		if !sub.IsSet(configMap) || sub.IsEqual(status, configMap)  {
+		if !sub.IsSet(configMap) || sub.IsEqual(status, configMap) {
 			continue
 		}
 		if err := sub.Create(configMap, name); err != nil {

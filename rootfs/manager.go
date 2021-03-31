@@ -11,6 +11,7 @@ import (
 )
 
 const Busybox = "busybox.tar"
+
 //go:embed rootfs/busybox.tar
 var busybox []byte
 
@@ -60,7 +61,7 @@ func (m manager) Destroy(container string) error {
 	return nil
 }
 
-func  (m manager) initImageStorage(storage string) error {
+func (m manager) initImageStorage(storage string) error {
 	if err := os.MkdirAll(storage, os.ModePerm); err != nil {
 		return err
 	}

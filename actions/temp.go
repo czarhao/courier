@@ -8,7 +8,7 @@ import (
 
 const (
 	DefaultTemplateName = "hello_world.yaml"
-	YamlTemplate = `
+	YamlTemplate        = `
 container:
   name: dev_container
   tty: true
@@ -27,8 +27,8 @@ limit:
 
 func Temp(c *cli.Context) error {
 	var (
-		file *os.File
-		err error
+		file     *os.File
+		err      error
 		filename = DefaultTemplateName
 	)
 	if c.Args().Len() > 0 {

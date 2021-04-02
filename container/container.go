@@ -18,9 +18,15 @@ type Process interface {
 }
 
 func RunProc(p Process) (err error) {
+	if err = p.Mount(); err != nil {
+		return err
+	}
+	defer p.Umount()
+
 	if err = p.SetNamespace(); err != nil {
 		return err
 	}
+
 	if err = p.Init(); err != nil {
 		return err
 	}
@@ -33,11 +39,6 @@ func RunProc(p Process) (err error) {
 	if err = p.SetCgroup(); err != nil {
 		return err
 	}
-
-	if err = p.Mount(); err != nil {
-		return err
-	}
-	defer p.Umount()
 
 	if err := p.SendCmd(); err != nil {
 		return err

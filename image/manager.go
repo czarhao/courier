@@ -107,7 +107,7 @@ func (m *manager) CreateContainerDir(container string) (string, error) {
 	return path, nil
 }
 
-func (m manager) Create(config *configs.OtherConfig) error {
+func (m *manager) Create(config *configs.OtherConfig) error {
 	readLayer, err := m.CreateLayer(config.Image)
 	if err != nil {
 		return err
@@ -129,7 +129,7 @@ func (m manager) Create(config *configs.OtherConfig) error {
 	return nil
 }
 
-func (m manager) Destroy(container string) error {
+func (m *manager) Destroy(container string) error {
 	path, ok := m.cache[container]
 	if !ok {
 		return fmt.Errorf("not find container %s", container)

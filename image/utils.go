@@ -1,6 +1,7 @@
 package image
 
 import (
+	"courier/configs"
 	"io/ioutil"
 	"os"
 	"path"
@@ -8,8 +9,16 @@ import (
 
 func fileExist(dir, file string) (bool, string) {
 	p := path.Join(dir, file)
-	_, err := os.Stat(p)
-	return err == nil, p
+	info, err := os.Stat(p)
+	if err != nil {
+		return false, p
+	}
+	if info.IsDir() {
+		if len(DirFileName(p)) == 0 {
+			return false, p
+		}
+	}
+	return true, p
 }
 
 func dumpFile(filename string, date []byte) error {
@@ -32,4 +41,8 @@ func DirFileName(dir string) []string {
 		fileNames = append(fileNames, file.Name())
 	}
 	return fileNames
+}
+
+func ExpectContainerDir(config *configs.ContainerConfig) string {
+	return path.Join(config.Image.ContainerDir, config.Other.Name)
 }

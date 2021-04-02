@@ -30,8 +30,7 @@ func NewProc(config *configs.ContainerConfig) (*proc, error) {
 
 	cmd := exec.Command("/proc/self/exe", "init")
 	cmd.ExtraFiles = []*os.File{rpipe}
-	// cmd.Dir = config.Mount.BaseDir
-	cmd.Dir = "/"
+	cmd.Dir = image.ExpectContainerDir(config)
 
 	if config.Other.TTY {
 		cmd.Stdin, cmd.Stdout, cmd.Stderr = os.Stdin, os.Stdout, os.Stderr
@@ -40,7 +39,7 @@ func NewProc(config *configs.ContainerConfig) (*proc, error) {
 	return &proc{
 		ns: namespace.NewNSManager(),
 		cm: cgroup.NewManager(),
-		//		rm:    rootfs.NewManager(),
+		im: image.NewImageManager(),
 		cfg:   config,
 		wpipe: wpipe,
 		cmd:   cmd,
@@ -75,7 +74,7 @@ func (p *proc) Init() error {
 	if err := p.cmd.Start(); err != nil {
 		return fmt.Errorf("start cmd proc failed, err: %v", err)
 	}
-	return p.im.Init(p.cfg.Image)
+	return nil
 }
 
 func (p *proc) SendCmd() error {
@@ -91,6 +90,9 @@ func (p *proc) Wait() error {
 }
 
 func (p *proc) Mount() error {
+	if err := p.im.Init(p.cfg.Image); err != nil {
+		return err
+	}
 	return p.im.Create(p.cfg.Other)
 }
 

@@ -1,7 +1,10 @@
 package configs
 
+import "path"
+
+const BASE = "/root/.courier"
+
 type ImageConfig struct {
-	BasePath string
 	ImageDir string
 	LayerDir string
 	WriteDir string
@@ -9,9 +12,8 @@ type ImageConfig struct {
 
 func NewDefaultImageConfig() *ImageConfig {
 	return &ImageConfig{
-		BasePath: "/root/.courier",
-		ImageDir: "/root/.courier/images",
-		LayerDir: "/root/.courier/layers",
-		WriteDir: "/root/.courier/write",
+		ImageDir: path.Join(BASE, "images"),
+		LayerDir: path.Join(BASE, "layer"),
+		WriteDir: path.Join(BASE, "write"),
 	}
 }

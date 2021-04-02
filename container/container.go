@@ -34,10 +34,10 @@ func RunProc(p Process) (err error) {
 		return err
 	}
 
-	//	if err = p.Mount(); err != nil {
-	//		return err
-	//	}
-	//	defer p.Umount()
+	if err = p.Mount(); err != nil {
+		return err
+	}
+	defer p.Umount()
 
 	if err := p.SendCmd(); err != nil {
 		return err

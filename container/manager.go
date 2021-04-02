@@ -3,6 +3,7 @@ package container
 import (
 	"courier/cgroup"
 	"courier/configs"
+	"courier/image"
 	"courier/namespace"
 	"fmt"
 	"os"
@@ -14,7 +15,7 @@ import (
 type proc struct {
 	ns namespace.Manager
 	cm cgroup.Manager
-	//	rm  rootfs.Manager
+	im image.Manager
 	cfg *configs.ContainerConfig
 
 	wpipe *os.File
@@ -74,7 +75,7 @@ func (p *proc) Init() error {
 	if err := p.cmd.Start(); err != nil {
 		return fmt.Errorf("start cmd proc failed, err: %v", err)
 	}
-	return nil
+	return p.im.Init(p.cfg.Image)
 }
 
 func (p *proc) SendCmd() error {
@@ -90,11 +91,9 @@ func (p *proc) Wait() error {
 }
 
 func (p *proc) Mount() error {
-	return nil
-	//	return p.rm.Create(p.cfg.Other.Name, p.cfg.Mount)
+	return p.im.Create(p.cfg.Other)
 }
 
 func (p *proc) Umount() error {
-	return nil
-	//	return p.rm.Destroy(p.cfg.Other.Name)
+	return p.im.Destroy(p.cfg.Other.Name)
 }

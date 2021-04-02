@@ -15,6 +15,7 @@ func fileExist(dir, file string) (bool, string) {
 	}
 	if info.IsDir() {
 		if len(DirFileName(p)) == 0 {
+			_ = os.Remove(p)
 			return false, p
 		}
 	}

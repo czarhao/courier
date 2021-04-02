@@ -80,7 +80,7 @@ func (m *manager) CreateLayer(image string) (string, error) {
 	if err := os.MkdirAll(layerPath, os.ModePerm); err != nil {
 		return "", err
 	}
-	if _, err := exec.Command("tar", "-zxvf", imagePath, "-C", layerPath).CombinedOutput(); err != nil {
+	if _, err := exec.Command("tar", "-xvf", imagePath, "-C", layerPath).CombinedOutput(); err != nil {
 		return "", err
 	}
 	return layerPath, nil
@@ -137,5 +137,5 @@ func (m *manager) Destroy(container string) error {
 	if err := syscall.Unmount(path, syscall.MNT_DETACH); err != nil {
 		return fmt.Errorf("mount %s failed, err: %v", path, err)
 	}
-	return nil
+	return os.Remove(path)
 }

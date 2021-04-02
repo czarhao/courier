@@ -14,6 +14,6 @@ func NewDefaultOtherConfig() *OtherConfig {
 		TTY:     true,
 		Name:    "courier_" + utils.RandString(10),
 		Image:   "busybox.tar",
-		Command: []string{"bash"},
+		Command: []string{"/bin/sh"},
 	}
 }
